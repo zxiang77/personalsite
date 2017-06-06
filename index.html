@@ -1,0 +1,145 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+
+        <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        styles: {
+            ".tex": {
+                "font-size":  "10%",
+                margin: "-5em 0em"
+            }
+        },
+        imageFont: "TeX",
+        webFont: "TeX",
+        tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+      },
+      "HTML-CSS": { availableFonts: ["TeX"] }
+    });
+  </script>
+        <script type="text/javascript" async
+                src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+        </script>
+        <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax
+        .js?config=TeX-AMS_HTML-full"></script>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title> Zili Xiang</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/bootstrap.css" rel="stylesheet">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+        <!-- Place favicon.ico in the root directory -->
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+        <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+
+    </head>
+    <body>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+        <div class="row">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-8">
+                <div class="row">
+                    <span id="spbio" class="page-header">Bio</span>
+                    <span id="spproj" class="page-header">Projects</span>
+                    <span id="spresume" class="page-header">Resume</span>
+                </div>
+                <div class="row">
+                    <div id="bio" class="cell">
+                        <h3>Bio</h3>
+                        <img id="profileImage" src="img/profile.jpg" />
+                        <div id="profileDisc">
+                            <p>Welcome to Zili's personal website!! I created this site to share some of my interesting projects and my thoughts. The site is still under development, so more projects will be posted in the coming days.</p>
+                            <p>Hi! I am Zili. I am currently a master student in Information Science at Cornell University. I am interested in machine learning, computer graphics and web development. Since I am curious in almost everything, my interest list might keep growing rapidly! </p>
+                        </div>
+                        <div class="clear-both"></div>
+                    </div>
+
+                    <div id="proj" class="hidden cell">
+                        <h3>Projects</h3>
+                        <div class="box">
+                            <h4 class="projTitle">Global Development Visualization</h4>
+                            <img src="img/proj1.png" />
+                            <div class="projAttr">Time: March, 2017</div>
+                            <div class="projAttr">Tags: Computer Graphics, GLSL, jQuery</div>
+                            <div class="projAttr">Description: This visualization displayed the growth of different countries in the world in terms of population (bubble size), expected life expectancy (y axis) and GDP(x-axis) since 1800s. The data set is from  <a href="http://www.gapminder.org/">gapminder</a>. There are some interesting patterns at times of globally influential events such as wars and economic depression. </div>
+                            <p> <a href="cs4621p2/index.html"> >> Click </a> for detail</p>
+                        </div>
+
+                        <div class="box">
+                            <h4 class="projTitle">Name Gender Classifier</h4>
+                            <img src="img/proj2.png" />
+                            <p>Image credit: <a href="http://sebastianraschka.com/Articles/2014_naive_bayes_1.html">http://sebastianraschka.com/Articles/2014_naive_bayes_1.html</a> </p>
+                            <div class="projAttr">Time: March, 2017</div>
+                            <div class="projAttr">Tags: Machine Learning, Naive Bayes Classifier, Numpy, Python</div>
+                            <div class="projAttr">
+                                <p>
+                                    <!--h(\vec{x}) = argmax_y \; P(y) \prod_{\alpha - 1}^d P(x_\alpha \mid y) = sign(\vec{w}^\top \vec{x} + b)-->
+                                    Description: This project aims to classify whether a name is a girl's name or boy's name with Naive Bayes classifier.
+                                </p>
+                                <p>
+                                    We made some assumptions on this problem, some of them turned out to be effective. I would like to share some of our intuitions:
+                                </p>
+                                <ul>
+                                    <li>Characters on the edge (starting and ending characters) is very helpful in classifying names. We define a variable FIX, which means the maximum number of characters to examine. The accuracy is highest when FIX = 3. The accuracy reached 80% after this feature being implemented;</li>
+                                    <li>Secondly, long names and short names should have different features respectively, as the previous feature only care about the beginning and ending characters but does not care about length at all. We think we should include some features which can incorporate the length of name strings. For short names, we checked the pattern of name composition. For example, our pattern represents consecutive vows/ non-vows in a name string. This feature is limited for short names, otherwise, some pattern would be too sparse to be effective. For long names, we extract some hedge segments from training data. This is a complement for edge characters because edge characters only check beginning and ending characters but ignore some important segments in the middle of name strings. The hedge segments are selected with the following constraint: 1) it must appear very frequent in data set; 2) it must appear more frequently in one class than the other. After these 2 features implemented, the result reached as high as 84.6%.</li>
+                                </ul>
+                                <p>
+                                    There are something else we learned from this project:
+                                </p>
+                                <p>
+                                    An effective feature should have less sparsity. For example, for edge characters, if FIX is too large, there must be a lot of distinct features and some of them might only appear limited times, which makes it nothing more than 'feature memorization'. The most extreme example is - if FIX is equal to the length of the name, the whole name will be used as a feature.
+                                </p>
+
+                             </div>
+                            <!--<p> <a href="cs4621p2/index.html"> >> Click </a> for detail</p>-->
+                        </div>
+
+                        <div class="box">
+                            <h4 class="projTitle">Maze Crawler</h4>
+                            <img src="img/proj3.png" />
+                            <div class="projAttr">Time: April, 2017</div>
+                            <div class="projAttr">Tags: Computer Graphics, GLSL, jQuery</div>
+                            <div class="projAttr">Description: This is a maze crawler similar to old Window screen saver. It may take a few seconds to load materials in the site. Use up, down to move forward or backward, and key left, right to turn left or right. You can edit Eye Height and Field of View to update camera parameters. In addition, you can customize your own maze by editing content in Maze. You have to note that the maze should be a m*n matrix, with "#" as wall, "." as path. You can use "N","S","W","E" to locate your starting point with each of them represent facing north, south, west and east. There should be only one starting point in a maze. Last but not least, the outermost layer must be "#". </div>
+                            <p> <a href="cs4621p3/index.html"> >> Click </a> for detail</p>
+                        </div>
+                        <div> </div>
+                    </div>
+
+                    <div id="resume" class="hidden cell">
+                        <object width="80%" height="600" data="img/Zili_Resume.pdf"></object>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2"></div>
+
+        </div>
+
+
+
+        <script src="js/jquery.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
+        <script src="js/plugins.js"></script>
+        <script src="js/main.js"></script>
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='https://www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-XXXXX-X','auto');ga('send','pageview');
+        </script>
+    </body>
+</html>

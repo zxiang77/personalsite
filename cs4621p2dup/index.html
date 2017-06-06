@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>CS 4621: PPA2 -- Data Visualization</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/cs4620.css" rel="stylesheet">
+    <link href="css/jquery-ui.min.css" rel="stylesheet">
+    <link href="css/jquery-ui.theme.min.css" rel="stylesheet">
+    <link href="css/jquery-ui.structure.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="row">
+
+    <div id="back"><p><a href="../index.html"> << Back </a> to main page</p> </div>
+</div>
+
+<div class="container">
+    <h1>CS 4621 PPA2 <span class="subtitle">Data Visualization</span></h1>
+    <div class="row">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10">
+            <div class="col-lg-8">
+                <div id="curYear" align="center">2000</div>
+                <canvas id="webglCanvas" align="center" style="border: none; background-color: black;" width="512" height="512"></canvas>
+                <br><br>
+                <div id="yearBar"></div><br>
+                <button id="playButton">Play!</button>
+            </div>
+
+            <div class="col-lg-4">
+                <br>
+                <p class="coursedesc">Cursor</p>
+                <table class="sched">
+                    <tr>
+                        <th>GDP per capita ($)</th>
+                        <td id="cursorGDP"></td>
+                    </tr>
+                    <tr>
+                        <th>Life expectancy (Years)</th>
+                        <td id="cursorLifeExp"></td>
+                    </tr>
+                </table>
+                <p class="coursedesc">Data Point</p>
+                <table class="sched">
+                    <tr>
+                        <th>Country</th>
+                        <td id="dpCountry"></td>
+                    </tr>
+                    <tr>
+                        <th>Year</th>
+                        <td id="dpYear"></td>
+                    </tr>
+                    <tr>
+                        <th>Population</th>
+                        <td id="dpPopulation"></td>
+                    </tr>
+                    <tr>
+                        <th>GDP per capita ($)</th>
+                        <td id="dpGDP"></td>
+                    </tr>
+                    <tr>
+                        <th>Life Expectancy (Year)</th>
+                        <td id="dpLifeExp"></td>
+                    </tr>
+                </table>
+                <p class="coursedesc">Country List</p>
+                <div id="countryCheckBox"></div>
+                <button id="deselectButton">Deselect</button>
+            </div>
+        </div>
+        <div class="col-lg-1"></div>
+    </div>
+    <div class="row">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10">
+            <br>
+            <table class="sched">
+                <tr>
+                    <th>GDP per capita scale</th>
+                    <td>
+                        <select id="scaleGDP">
+                            <option value="linear">Linear</option>
+                            <option value="log">Logarithm</option>
+                        </select>
+                    </td>
+                    <th>Life expectancy scale</th>
+                    <td>
+                        <select id="scaleLifeExp">
+                            <option value="linear">Linear</option>
+                            <option value="log">Logarithm</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Population Scale</th>
+                    <td><div id="scalePop"></div></td>
+                    <th>Transparency</th>
+                    <td><div  id="scaleTransp"></div></td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-lg-1"></div>
+    </div>
+
+    <h2>Team Members</h2>
+    <ul>
+        <li>Please list your team members with NetID in this unordered list.</li>
+        <li>Shiyu Wang (sw673)</li>
+        <li>Zili Xiang (zx77)</li>
+        <li>Yuyan Tang (yt429)</li>
+    </ul>
+</div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery-3.1.1.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
+<!-- Data -->
+<script src="data/country_list.js"></script>
+<script src="data/population.js"></script>
+<script src="data/gdp_per_capita.js"></script>
+<script src="data/life_expectancy.js"></script>
+<script id="backgroundVertexShader" type="x-shader/x-vertex">
+    attribute vec2 position;
+    void main() {
+        gl_Position = vec4(position, 0.95, 1.0);
+    }
+
+</script>
+
+<script id="backgroundFragementShader" type="x-shader/x-fragment">
+    precision highp float;
+
+    void main() {
+        gl_FragColor = vec4(0.98, 0.98, 0.98, 1.0);
+    }
+</script>
+
+<script id="lineVertexShader" type="x-shader/x-vertex">
+    attribute vec2 position;
+
+    void main() {
+        gl_Position = vec4(position, 0.9, 1.0);
+    }
+</script>
+
+<script id="lineFragmentShader" type="x-shader/x-fragment">
+    precision highp float;
+
+    void main() {
+        gl_FragColor = vec4(0.8, 0.8, 0.8, 1.0);
+    }
+</script>
+
+<script id="selectCircleVertexShader" type="x-shader/x-vertex">
+    attribute vec2 position;
+    attribute float selectCircleSize;
+    uniform vec2 center;
+    uniform float size;
+
+    void main() {
+        vec2 p = (size + 0.02 * selectCircleSize) * position + center;
+        gl_Position = vec4(p, -1.0, 1.0);
+    }
+</script>
+
+<script id="selectCircleFragmentShader" type="x-shader/x-fragment">
+    precision highp float;
+    void main() {
+        gl_FragColor = vec4(0.19140625, 0.5078125, 0.73828125, 1.0);
+    }
+</script>
+
+<script id="highlightCircleVertexShader" type="x-shader/x-vertex">
+    attribute vec2 position;
+    uniform vec2 center;
+    uniform float size;
+
+    void main() {
+        vec2 p = size * position + center;
+        gl_Position = vec4(p, -1.0, 1.0);
+    }
+</script>
+
+<script id="highlightCircleFragmentShader" type="x-shader/x-fragment">
+    precision highp float;
+    void main() {
+        gl_FragColor = vec4(0.19140625, 0.5078125, 0.73828125, 1.0);
+    }
+</script>
+
+<script id="circleVertexShader" type="x-shader/x-vertex">
+    attribute vec3 position;
+    attribute vec4 color;
+    varying vec4 geomColor;
+    void main() {
+        gl_Position = vec4(position, 1.0);
+        geomColor = vec4(color);
+    }
+</script>
+
+<script id="circleFragmentShader" type="x-shader/x-fragment">
+    precision highp float;
+    varying vec4 geomColor;
+    void main() {
+        gl_FragColor = vec4(geomColor);
+    }
+</script>
+
+<script id="countryConnectVertexShader" type="x-shader/x-vertex">
+    attribute vec2 position;
+    attribute vec4 color;
+    varying vec4 geomColor;
+    void main() {
+        gl_Position = vec4(position, 0.45, 1.0);
+        geomColor = color;
+    }
+</script>
+
+<script id="countryConnectFragmentShader" type="x-shader/x-fragment">
+    precision highp float;
+    varying vec4 geomColor;
+
+    void main() {
+        gl_FragColor = geomColor;
+    }
+</script>
+
+<script id="circleOutlineVertexShader" type="x-shader/x-vertex">
+    attribute vec3 position;
+    attribute float alpha;
+    varying float geomAlpha;
+    void main() {
+        gl_Position = vec4(position, 1.0);
+        geomAlpha = alpha;
+    }
+</script>
+
+<script id="circleOutlineFragmentShader" type="x-shader/x-fragment">
+    precision highp float;
+    varying float geomAlpha;
+    void main() {
+        gl_FragColor = vec4(0.7, 0.7, 0.7, geomAlpha);
+    }
+</script>
+
+<script src="js/render.js"></script>
+<script src="js/interface.js"></script>
+</body>
+</html>
